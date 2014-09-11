@@ -42,9 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CGame.cs" />
+    <Compile Include="CGameEngine.cs" />
+    <Compile Include="CInput.cs" />
+    <Compile Include="CKeyBoard.cs" />
+    <Compile Include="CPoint.cs" />
+    <Compile Include="CRun.cs" />
     <Compile Include="ICGame.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -13,10 +13,31 @@ namespace ConsoleGame
         /// 画面更新速度
         /// </summary>
         private int updateRate;
+
+        public int UpdateRate
+        {
+            get { return updateRate; }
+            set { updateRate = value; }
+        }
         /// <summary>
         /// 帧率
         /// </summary>
         private int fps;
+
+        public int Fps
+        {
+            get {
+                int ticks = Environment.TickCount;
+                tickCount += 1;
+                if (ticks - lastTime >= 1000)
+                {
+                    fps = tickCount;
+                    tickCount = 0;
+                    lastTime = ticks;
+                }
+                return fps;
+            }
+        }
         /// <summary>
         /// 帧数计数
         /// </summary>
@@ -29,6 +50,12 @@ namespace ConsoleGame
         /// 游戏结束标志
         /// </summary>
         private bool isGameOver;
+
+        public bool IsGameOver
+        {
+            get { return isGameOver; }
+            set { isGameOver = value; }
+        }
         #endregion
 
         #region 运行方法
@@ -54,18 +81,61 @@ namespace ConsoleGame
         #endregion
 
         #region 游戏设置方法
-
-
+        /// <summary>
+        /// 延迟1毫秒
+        /// </summary>
+        private void Delay()
+        {
+            this.Delay(1);
+        }
+        /// <summary>
+        /// 延迟指定毫秒
+        /// </summary>
+        /// <param name="time">延迟毫秒数</param>
+        protected void Delay(int time)
+        {
+            Thread.Sleep(time);
+        }
+        /// <summary>
+        /// 设置是否显示光标
+        /// </summary>
+        /// <param name="visible"></param>
+        protected void SetCursorVisible(bool visible)
+        {
+            Console.CursorVisible = visible;
+        }
+        /// <summary>
+        /// 关闭游戏并释放资源
+        /// </summary>
+        private void Close()
+        { }
+        /// <summary>
+        /// 设置控制台标题
+        /// </summary>
+        /// <param name="title"></param>
+        protected void SetTitle(string title)
+        {
+            Console.Title = title;
+        }
         #endregion
 
-        /// <summary>
-        /// 实现接口
-        /// </summary>
-        public void run()
-        { 
-            int a = 0;
-                 
-        
+        #region 游戏启动接口
+        public void Run()
+        {
+            this.GameInit();
+            int startTime = 0;
+            while (!isGameOver)
+            {
+                startTime = Environment.TickCount;
+                GameLoop();
+                while (Environment.TickCount - startTime < updateRate)
+                {
+                    Delay();
+                }
+            }
+            GameExit();
+            Close();
         }
+        #endregion
     }
 }
