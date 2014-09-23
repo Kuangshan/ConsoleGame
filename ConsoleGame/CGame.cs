@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace ConsoleGame
 {
@@ -8,7 +9,25 @@ namespace ConsoleGame
     /// </summary>
     public abstract class CGame:ICGame
     {
+        #region Api函数
+        [DllImport("User32.dll")]
+        private static extern IntPtr FindWindow(String lpClassName, String lpWindowName);  
+        #endregion
+
         #region 字段
+        /// <summary>
+        /// 控制台句柄
+        /// </summary>
+        private IntPtr hwnd = IntPtr.Zero;
+        /// <summary>
+        /// 鼠标输入设备
+        /// </summary>
+        private CMouse dcMouse;
+        /// <summary>
+        /// 键盘输入设备
+        /// </summary>
+        private CKeyBoard dcKeyboard;
+
         /// <summary>
         /// 画面更新速度
         /// </summary>
@@ -65,7 +84,48 @@ namespace ConsoleGame
         public CGame()
         {
             isGameOver = false;
+
+            hwnd = FindWindow(null, Console.Title);
+            dcMouse = new CMouse(hwnd);
+            dcKeyboard = new CKeyBoard();
+
+            dcMouse.AddMouseMoveEvent(GameMouseMove);
+            dcMouse.AddMouseAwayEvent(GameMouseAway);
+            dcMouse.AddMouseDownEvent(GameMouseDown);
+
+            dcKeyboard.AddKeyDownEvent(GameKeyDown);
+            dcKeyboard.AddKeyUpEvent(GameKeyUp);
         }
+
+        
+        #region 游戏输入事件
+        protected virtual void GameMouseMove(CMouseEventArgs e)
+        {
+            
+        }
+        protected virtual void GameMouseAway(CMouseEventArgs e)
+        {
+
+        }
+        protected virtual void GameMouseDown(CMouseEventArgs e)
+        {
+
+        }
+        protected virtual void GameKeyDown(CKeyboardEventArgs e)
+        {
+
+        }
+        protected virtual void GameKeyUp(CKeyboardEventArgs e)
+        {
+
+        }
+        #endregion
+        private void GameInput()
+        {
+            this.GetMouseDevice().mouseEventsHandler();
+            this.GetKeyboardDevice().KeyBoardEventsHandler();
+        }
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -78,6 +138,17 @@ namespace ConsoleGame
         /// 游戏退出
         /// </summary>
         protected abstract void GameExit();
+        #endregion
+
+        #region 游戏输入设备
+        internal CMouse GetMouseDevice()
+        {
+            return dcMouse;
+        }
+        internal CKeyBoard GetKeyboardDevice()
+        {
+            return dcKeyboard;
+        }
         #endregion
 
         #region 游戏设置方法
@@ -127,6 +198,7 @@ namespace ConsoleGame
             while (!isGameOver)
             {
                 startTime = Environment.TickCount;
+                GameInput();
                 GameLoop();
                 while (Environment.TickCount - startTime < updateRate)
                 {

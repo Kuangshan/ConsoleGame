@@ -11,7 +11,7 @@ namespace ConsoleGame
             this.keys = keys;
         }
 
-        public CKeys getKey()
+        public CKeys GetKey()
         {
             return keys;
         }
