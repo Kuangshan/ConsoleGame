@@ -45,6 +45,9 @@
     <Compile Include="CGameEngine.cs" />
     <Compile Include="CInput.cs" />
     <Compile Include="CKeyBoard.cs" />
+    <Compile Include="CKeyboardEventArgs.cs" />
+    <Compile Include="CMouse.cs" />
+    <Compile Include="CMouseEventArgs.cs" />
     <Compile Include="CPoint.cs" />
     <Compile Include="CRun.cs" />
     <Compile Include="ICGame.cs" />
